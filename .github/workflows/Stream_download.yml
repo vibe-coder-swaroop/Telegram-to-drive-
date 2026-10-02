@@ -33,7 +33,7 @@ jobs:
     - name: Configure Rclone Connection
       env:
         # 1. Switch to secrets if this contains sensitive tokens to prevent parsing leaks
-        RCLONE_CONF_JSON: ${{ secrets.RCLONE_CONF }} 
+        RCLONE_CONF_JSON: ${{ vars.RCLONE_CONF }} 
       run: |
         mkdir -p ~/.config/rclone
         
