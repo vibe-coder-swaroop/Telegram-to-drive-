@@ -28,18 +28,23 @@ jobs:
         python -m pip install --upgrade pip
         pip install yt-dlp
 
+    
+
     - name: Configure Rclone Connection
       env:
-        RCLONE_CONF_JSON: ${{ vars.RCLONE_CONF }}
+        # 1. Switch to secrets if this contains sensitive tokens to prevent parsing leaks
+        RCLONE_CONF_JSON: ${{ secrets.RCLONE_CONF }} 
       run: |
         mkdir -p ~/.config/rclone
-        # CRITICAL FIX: Wrapped 'EOF' in single quotes to protect inner JSON layout structure
-        cat << 'EOF' > ~/.config/rclone/rclone.conf
+        
+        # 2. REMOVE single quotes around EOF so the runner can inject the environment variable
+        cat << EOF > ~/.config/rclone/rclone.conf
         [gdrive]
         type = drive
         scope = drive
         token = $RCLONE_CONF_JSON
         EOF
+        
 
     - name: Mount Google Drive
       run: |
